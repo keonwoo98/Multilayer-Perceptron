@@ -12,6 +12,7 @@ import numpy as np
 
 from srcs.network import Network
 from srcs.preprocessing import load_data, compute_stats, standardize, one_hot
+from srcs.plotting import plot_history
 
 MODEL_PATH = "models/model.npz"
 
@@ -42,7 +43,7 @@ def main():
     # Input size is fixed by the data (30); output is 2 (benign/malignant).
     layer_sizes = [X_train.shape[1]] + args.layers + [2]
     net = Network(layer_sizes, seed=args.seed)
-    net.fit(X_train, y_train, X_val, y_val, args.epochs, args.lr)
+    history = net.fit(X_train, y_train, X_val, y_val, args.epochs, args.lr)
 
     # Save weights, network shape, and the normalization stats together,
     # so predict.py can rebuild the exact same model and transform.
@@ -53,6 +54,8 @@ def main():
         params[f"b{i}"] = layer.b
     np.savez(MODEL_PATH, **params)
     print(f"> saving model '{MODEL_PATH}' to disk...")
+
+    plot_history(history)
 
 
 if __name__ == "__main__":
