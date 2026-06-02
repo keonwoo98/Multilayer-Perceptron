@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# 가상환경
+venv/
+.venv/
+env/
+
+# 학습 산출물
+models/
+*.npz
+*.npy
+
+# split 결과 (재생성 가능)
+data_train.csv
+data_valid.csv
+
+# OS
+.DS_Store
