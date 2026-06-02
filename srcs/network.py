@@ -30,6 +30,22 @@ class Network:
             x = layer.forward(x)
         return x
 
+    def backward(self, y_pred, y_true):
+        """Propagate the error from the output back to the first layer.
+
+        For softmax output + cross-entropy loss, the output-layer error
+        simplifies to (prediction - target). Each layer then stores its
+        own gradients and hands the error to the layer before it.
+        """
+        delta = y_pred - y_true
+        for layer in reversed(self.layers):
+            delta = layer.backward(delta)
+
+    def update(self, lr):
+        """Apply one gradient-descent step on every layer."""
+        for layer in self.layers:
+            layer.update(lr)
+
     def predict(self, x):
         """Alias for forward, used at prediction time."""
         return self.forward(x)
