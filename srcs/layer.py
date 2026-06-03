@@ -15,8 +15,11 @@ class DenseLayer:
     def __init__(self, n_inputs, n_neurons, activation="sigmoid", seed=None):
         if seed is not None:
             np.random.seed(seed)
-        # Small random weights break symmetry between neurons.
-        self.W = np.random.randn(n_neurons, n_inputs) * 0.01
+        # He initialization: random weights scaled by sqrt(2 / n_inputs).
+        # Random values break symmetry between neurons; the scaling keeps the
+        # signal from vanishing through deep networks (a plain *0.01 fails to
+        # train networks with 3+ hidden layers).
+        self.W = np.random.randn(n_neurons, n_inputs) * np.sqrt(2.0 / n_inputs)
         self.b = np.zeros(n_neurons)
         self.activation = activation
 
