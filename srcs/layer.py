@@ -49,8 +49,3 @@ class DenseLayer:
         # This layer's input IS the previous layer's output, so reuse it.
         da_prev = self.W.T @ delta
         return da_prev * sigmoid_derivative(self.input)
-
-    def update(self, lr):
-        """Apply one gradient-descent step: W -= lr * dW, b -= lr * db."""
-        self.W -= lr * self.dW
-        self.b -= lr * self.db

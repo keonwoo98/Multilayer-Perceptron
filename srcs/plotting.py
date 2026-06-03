@@ -1,5 +1,6 @@
 """Plot the learning curves recorded during training."""
 
+import matplotlib
 import matplotlib.pyplot as plt
 
 
@@ -26,4 +27,7 @@ def plot_history(history, save_path="learning_curves.png"):
     plt.tight_layout()
     plt.savefig(save_path)
     print(f"> learning curves saved to '{save_path}'")
-    plt.show()
+    # Only open a window with an interactive backend (avoids a warning when
+    # running head-less, e.g. on an evaluation server).
+    if matplotlib.get_backend().lower() != "agg":
+        plt.show()

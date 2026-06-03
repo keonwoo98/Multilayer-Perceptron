@@ -42,11 +42,6 @@ class Network:
         for layer in reversed(self.layers):
             delta = layer.backward(delta)
 
-    def update(self, lr):
-        """Apply one gradient-descent step on every layer."""
-        for layer in self.layers:
-            layer.update(lr)
-
     def predict(self, x):
         """Alias for forward, used at prediction time."""
         return self.forward(x)
@@ -61,20 +56,36 @@ class Network:
         accuracy = np.mean(preds.argmax(axis=1) == y.argmax(axis=1))
         return loss, accuracy
 
-    def fit(self, X_train, y_train, X_val, y_val, epochs, lr):
-        """Train with stochastic gradient descent, one sample at a time.
+    def fit(self, X_train, y_train, X_val, y_val, epochs, optimizer,
+            batch_size=8, early_stopping=False, patience=10):
+        """Train with mini-batch gradient descent.
 
-        Each epoch: shuffle the data, then for every sample run
-        forward -> backward -> update. After each epoch, record and print
-        the training and validation metrics.
+        Each epoch: shuffle, split into mini-batches, and for each batch
+        average the per-sample gradients before letting the optimizer
+        update the weights. Averaging smooths the updates and curbs the
+        over-confident predictions that hurt the cross-entropy loss.
+
+        If early_stopping is on, training stops when the validation loss
+        has not improved for `patience` epochs, and the best weights are
+        restored.
         """
         history = {"loss": [], "val_loss": [], "acc": [], "val_acc": []}
         n = len(X_train)
+        best_val, best_weights, wait = float("inf"), None, 0
+
         for epoch in range(epochs):
-            for i in np.random.permutation(n):
-                pred = self.forward(X_train[i])
-                self.backward(pred, y_train[i])
-                self.update(lr)
+            order = np.random.permutation(n)
+            for start in range(0, n, batch_size):
+                batch = order[start:start + batch_size]
+                grads = [(np.zeros_like(l.W), np.zeros_like(l.b)) for l in self.layers]
+                for i in batch:
+                    pred = self.forward(X_train[i])
+                    self.backward(pred, y_train[i])
+                    for k, layer in enumerate(self.layers):
+                        grads[k] = (grads[k][0] + layer.dW, grads[k][1] + layer.db)
+                m = len(batch)
+                grads = [(gW / m, gb / m) for gW, gb in grads]
+                optimizer.step(self.layers, grads)
 
             loss, acc = self.evaluate(X_train, y_train)
             val_loss, val_acc = self.evaluate(X_val, y_val)
@@ -83,4 +94,20 @@ class Network:
             history["acc"].append(acc)
             history["val_acc"].append(val_acc)
             print(f"epoch {epoch + 1}/{epochs} - loss: {loss:.4f} - val_loss: {val_loss:.4f}")
+
+            if early_stopping:
+                if val_loss < best_val:
+                    best_val = val_loss
+                    best_weights = [(l.W.copy(), l.b.copy()) for l in self.layers]
+                    wait = 0
+                else:
+                    wait += 1
+                    if wait >= patience:
+                        print(f"> early stopping at epoch {epoch + 1} "
+                              f"(best val_loss: {best_val:.4f})")
+                        break
+
+        if early_stopping and best_weights is not None:
+            for layer, (W, b) in zip(self.layers, best_weights):
+                layer.W, layer.b = W, b
         return history

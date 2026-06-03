@@ -55,3 +55,18 @@ def one_hot(y):
         else:
             encoded[i] = [1, 0]
     return encoded
+
+
+def train_val_split(X, y, val_ratio=0.2, seed=None):
+    """Shuffle and split arrays into a training and a validation part.
+
+    Used when only a training file is given (e.g. the evaluation provides
+    data_training.csv but no separate validation file).
+    """
+    if seed is not None:
+        np.random.seed(seed)
+    n = len(X)
+    indices = np.random.permutation(n)
+    n_val = int(n * val_ratio)
+    val_idx, train_idx = indices[:n_val], indices[n_val:]
+    return X[train_idx], y[train_idx], X[val_idx], y[val_idx]

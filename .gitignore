@@ -16,6 +16,8 @@ models/
 # split 결과 (재생성 가능)
 data_train.csv
 data_valid.csv
+data_training.csv
+data_test.csv
 
 # OS
 .DS_Store
