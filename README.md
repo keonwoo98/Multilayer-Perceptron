@@ -50,7 +50,7 @@ Useful options:
 | `--batch_size`    | 16      | mini-batch size                          |
 | `--optimizer`     | sgd     | `sgd` or `adam`                          |
 | `--weight_decay`  | 1e-3    | L2 regularization strength               |
-| `--early_stopping`| off     | stop when validation loss plateaus       |
+| `--no_early_stopping`| (on)  | disable early stopping (on by default)   |
 
 ### 3. Predict
 
@@ -77,7 +77,7 @@ python predict.py --data data_test.csv
 - mini-batch gradient descent
 - L2 regularization (weight decay)
 - Adam optimizer (`--optimizer adam`)
-- early stopping (`--early_stopping`)
+- early stopping (on by default; `--no_early_stopping` to disable)
 - extra metrics: precision, recall, F1
 
 ## Project structure

@@ -40,8 +40,11 @@ def main():
     parser.add_argument("--optimizer", choices=["sgd", "adam"], default="sgd")
     parser.add_argument("--weight_decay", type=float, default=1e-3,
                         help="L2 regularization strength (curbs overfitting)")
-    parser.add_argument("--early_stopping", action="store_true",
-                        help="stop when validation loss stops improving")
+    parser.add_argument("--no_early_stopping", dest="early_stopping",
+                        action="store_false",
+                        help="disable early stopping (enabled by default; it stops "
+                             "training when validation loss plateaus and restores the "
+                             "best weights, which improves single-run robustness)")
     parser.add_argument("--patience", type=int, default=15,
                         help="epochs to wait before early stopping")
     parser.add_argument("--val_ratio", type=float, default=0.2,
