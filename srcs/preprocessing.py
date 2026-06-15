@@ -57,16 +57,24 @@ def one_hot(y):
     return encoded
 
 
+def split_indices(n, val_ratio, seed=None):
+    """Shuffle 0..n-1 and cut them into (train_idx, val_idx).
+
+    Single source of truth for the shuffle-and-cut logic, shared by
+    split.py and train_val_split.
+    """
+    if seed is not None:
+        np.random.seed(seed)
+    indices = np.random.permutation(n)
+    n_val = int(n * val_ratio)
+    return indices[n_val:], indices[:n_val]
+
+
 def train_val_split(X, y, val_ratio=0.2, seed=None):
     """Shuffle and split arrays into a training and a validation part.
 
     Used when only a training file is given (e.g. the evaluation provides
     data_training.csv but no separate validation file).
     """
-    if seed is not None:
-        np.random.seed(seed)
-    n = len(X)
-    indices = np.random.permutation(n)
-    n_val = int(n * val_ratio)
-    val_idx, train_idx = indices[:n_val], indices[n_val:]
+    train_idx, val_idx = split_indices(len(X), val_ratio, seed)
     return X[train_idx], y[train_idx], X[val_idx], y[val_idx]

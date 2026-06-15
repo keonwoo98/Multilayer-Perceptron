@@ -25,6 +25,7 @@ data_test.csv
 # 학습 산출물 (재생성 가능)
 learning_curves.png
 
-# 평가 자료 (git에 올리지 않음)
+# 평가 자료 (git에 올리지 않음 — 42 제공, 우리 제출물 아님)
 Intra Projects multilayer-perceptron Edit.pdf
 Multilayer Perceptron.pdf
+evaluation.py

@@ -6,26 +6,16 @@ Usage:
 
 import argparse
 
-import numpy as np
 import pandas as pd
+
+from srcs.preprocessing import split_indices
 
 
 def split_data(path, val_ratio, seed):
     """Shuffle the rows and cut them into a training and a validation set."""
     df = pd.read_csv(path, header=None)
-    n = len(df)
-
-    # Fix the seed so the same split can be reproduced later.
-    np.random.seed(seed)
-    indices = np.random.permutation(n)
-
-    n_valid = int(n * val_ratio)
-    valid_idx = indices[:n_valid]
-    train_idx = indices[n_valid:]
-
-    train = df.iloc[train_idx]
-    valid = df.iloc[valid_idx]
-    return train, valid
+    train_idx, valid_idx = split_indices(len(df), val_ratio, seed)
+    return df.iloc[train_idx], df.iloc[valid_idx]
 
 
 def main():
