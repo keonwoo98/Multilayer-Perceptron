@@ -93,5 +93,5 @@ srcs/
   losses.py        cross-entropy
   metrics.py       accuracy, precision, recall, F1
   plotting.py      learning curves
-docs/              concept notes and design (Korean)
+docs/디펜스_대본.md  defense script: concepts, commands, Q&A (Korean)
 ```
