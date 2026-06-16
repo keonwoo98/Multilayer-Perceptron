@@ -29,3 +29,7 @@ learning_curves.png
 Intra Projects multilayer-perceptron Edit.pdf
 Multilayer Perceptron.pdf
 evaluation.py
+
+# TTS 학습 도구 (개인용 — 키와 생성 음성은 올리지 않음)
+.env
+*.mp3
