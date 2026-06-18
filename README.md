@@ -98,6 +98,16 @@ model and transform:
 
 ### 6. Show the bonuses
 
+Flags that enable / show each bonus:
+
+| bonus                | flag                                                      |
+|----------------------|-----------------------------------------------------------|
+| Adam optimizer       | `--optimizer adam --lr 0.001`                             |
+| mini-batch GD        | `--batch_size 16` (default; `--batch_size 1` = pure SGD)  |
+| L2 regularization    | `--weight_decay 1e-3` (default; `--weight_decay 0` = off) |
+| early stopping       | on by default (no flag; `--no_early_stopping` to disable) |
+| precision/recall/F1  | always printed by `predict.py`                            |
+
 ```bash
 # Adam optimizer
 python3 train.py data_training.csv --optimizer adam --lr 0.001 --epochs 40
