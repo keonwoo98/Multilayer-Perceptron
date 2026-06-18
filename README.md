@@ -182,5 +182,4 @@ srcs/
   losses.py        cross-entropy (categorical + binary)
   metrics.py       accuracy, precision, recall, F1
   plotting.py      learning curves
-docs/디펜스_대본.md  defense script: concepts, commands, Q&A (Korean / English)
 ```
